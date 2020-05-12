@@ -8,7 +8,7 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-public class LetturaCodici {
+public class LetturaPersone {
 	
 	static String filename = "inputPersone.xml";
 
@@ -100,6 +100,20 @@ public class LetturaCodici {
 		} catch (XMLStreamException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+	
+	public static void calculateCodicePresente() {
+		boolean presente;
+		for (int i = 0; i < persone.size(); i++) {
+			presente = false;
+			for (int j = 0; j < LetturaCodiciFiscali.codiciValidi.size(); j++) {
+				if (LetturaCodiciFiscali.codiciValidi.get(j).contentEquals(persone.get(i).getCodiceFiscale())) {
+					presente = true;
+					break;
+				}
+			}
+			persone.get(i).setCodicePresente(presente);
 		}
 	}
 	

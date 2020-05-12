@@ -4,9 +4,9 @@ public class CodiceMain {
 
 	public static void main(String[] args) {
 
-		LetturaCodici.initializeReader();
+		LetturaPersone.initializeReader(); 
 		
-		LetturaCodici.extractPeople();
+		LetturaPersone.extractPeople();
 		
 		LetturaCodiciComune.initializeReader();
 		
@@ -14,10 +14,22 @@ public class CodiceMain {
 		
 		CreazioneCodici.generaCodici();
 		
-		for (int i = 0; i < LetturaCodici.persone.size(); i++) {
-			System.out.println(LetturaCodici.persone.get(i).toString() + "\n");
+		LetturaCodiciFiscali.initializeReader();
+		
+		LetturaCodiciFiscali.extractCodiciFiscali();
+		
+		LetturaCodiciFiscali.calculateCodiciInvalidi();
+		
+		LetturaCodiciFiscali.calculateCodiciSpaiati();
+		
+		LetturaPersone.calculateCodicePresente();
+		
+		for (int i = 0; i < LetturaCodiciFiscali.codiciInvalidi.size(); i++) {
+			System.out.println(LetturaCodiciFiscali.codiciInvalidi.get(i) + "\n");
 		}
-
+		System.out.println(LetturaCodiciFiscali.codiciInvalidi.size() + "\n");
+		System.out.println(LetturaCodiciFiscali.codiciValidi.size() + "\n");
+		System.out.println(LetturaPersone.persone.size() + "\n");
 	}
 
 }

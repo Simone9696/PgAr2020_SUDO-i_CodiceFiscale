@@ -6,6 +6,7 @@ import java.util.regex.*;
 public class Persona {
 	
 	private String nome, cognome, sesso, dataDiNascita, comuneDiNascita, codiceFiscale;
+	private boolean codicePresente;
 
 	/**
 	 * @return the nome
@@ -217,10 +218,14 @@ public class Persona {
 	
 		int somma = 0;
 		for (int i = 0; i < codiceTemp.length(); i++) {
-			if (i % 2 == 0) { // lettera dispari
-				somma += mappaCaratteriDispari.get(codiceTemp.charAt(i));
-			} else {
-				somma += mappaCaratteriPari.get(codiceTemp.charAt(i));
+			try {
+				if (i % 2 == 0) { // lettera dispari
+					somma += mappaCaratteriDispari.get(codiceTemp.charAt(i));
+				} else {
+					somma += mappaCaratteriPari.get(codiceTemp.charAt(i));
+				}
+			} catch (Exception e) {
+				System.out.println(this.toString());
 			}
 		}
 		
@@ -240,33 +245,48 @@ public class Persona {
 
 	private String generaCodiceGiorno() {
 		
-		Pattern giorno = Pattern.compile("-[0-9]{2}$");
-		Matcher matcher = giorno.matcher(dataDiNascita);
-		String codice = null;
-		if (matcher.find()) codice = matcher.group().substring(1);
-		if (sesso.toUpperCase() == "F") codice += 40;
-		return codice;
+		if (generaCodiceMese() != "B") {
+			Pattern giorno = Pattern.compile("-(0[1-9]|[12][0-9]|3[01])$");
+			Matcher matcher = giorno.matcher(dataDiNascita);
+			String codice = null;
+			if (matcher.find()) codice = matcher.group().substring(1);
+			if (sesso.toUpperCase() == "F") codice += 40;
+			return codice;
+		} else {
+			Pattern giorno = Pattern.compile("-(0[1-9]|1[0-9]|2[0-9])$");
+			Matcher matcher = giorno.matcher(dataDiNascita);
+			String codice = null;
+			if (matcher.find()) codice = matcher.group().substring(1);
+			if (sesso.toUpperCase() == "F") codice += 40;
+			return codice;
+		}
+		
 	}
 
 	private String generaCodiceMese() {
 		
-		Pattern mese = Pattern.compile("-[0-9]{2}-");
+		Pattern mese = Pattern.compile("-(0[1-9]|1[0-2])-");
 		Matcher matcher = mese.matcher(dataDiNascita);
 		String numMese = null;
 		if (matcher.find()) numMese = matcher.group().substring(1, 3);
-		switch (numMese) {
-		case "01": return "A";
-		case "02": return "B";
-		case "03": return "C";
-		case "04": return "D";
-		case "05": return "E";
-		case "06": return "H";
-		case "07": return "L";
-		case "08": return "M";
-		case "09": return "P";
-		case "10": return "R";
-		case "11": return "S";
-		case "12": return "T";
+		try {
+			switch (numMese) {
+			case "01": return "A";
+			case "02": return "B";
+			case "03": return "C";
+			case "04": return "D";
+			case "05": return "E";
+			case "06": return "H";
+			case "07": return "L";
+			case "08": return "M";
+			case "09": return "P";
+			case "10": return "R";
+			case "11": return "S";
+			case "12": return "T";
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} return null;
 	}
 
@@ -352,6 +372,14 @@ public class Persona {
 	public String toString() {
 		return "Persona [nome=" + nome + ", cognome=" + cognome + ", sesso=" + sesso + ", dataDiNascita="
 				+ dataDiNascita + ", comuneDiNascita=" + comuneDiNascita + ", codiceFiscale=" + codiceFiscale + "]";
+	}
+
+	public boolean isCodicePresente() {
+		return codicePresente;
+	}
+
+	public void setCodicePresente(boolean codicePresente) {
+		this.codicePresente = codicePresente;
 	}
 	
 	

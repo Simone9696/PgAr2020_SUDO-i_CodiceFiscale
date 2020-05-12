@@ -8,6 +8,10 @@ public class CodiceMain {
 		
 		LetturaCodici.extractPeople();
 		
+		LetturaCodiciComune.initializeReader();
+		
+		LetturaCodiciComune.extractCodiceComune();
+		
 		CreazioneCodici.generaCodici();
 		
 		for (int i = 0; i < LetturaCodici.persone.size(); i++) {

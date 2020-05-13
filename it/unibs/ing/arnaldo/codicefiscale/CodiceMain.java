@@ -24,12 +24,10 @@ public class CodiceMain {
 		
 		LetturaPersone.calculateCodicePresente();
 		
-		for (int i = 0; i < LetturaCodiciFiscali.codiciInvalidi.size(); i++) {
-			System.out.println(LetturaCodiciFiscali.codiciInvalidi.get(i) + "\n");
-		}
-		System.out.println(LetturaCodiciFiscali.codiciInvalidi.size() + "\n");
-		System.out.println(LetturaCodiciFiscali.codiciValidi.size() + "\n");
-		System.out.println(LetturaPersone.persone.size() + "\n");
+		ScritturaPersone.initializeWriter();
+		
+		ScritturaPersone.printFile();
+		
 	}
 
 }

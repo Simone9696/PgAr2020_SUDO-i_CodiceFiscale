@@ -12,7 +12,7 @@ import javax.xml.stream.XMLStreamWriter;
 public class ScritturaPersone {
 
 	 private static final String PERSONE_NUMERO = "persone numero";
-	static String version="1.0";
+	  static String version="1.0";
 	 static String encoding="UTF-8";
 	 static String filename = "Persone.xml";
 	 static XMLOutputFactory xmlof = null;
@@ -23,6 +23,7 @@ public class ScritturaPersone {
 	private static String comune_nascita;
 	private static String data_nascita;
 	private static String codice_fiscale;
+	private static String invalidi_numero;
 	 
 	 
 	 public static void initializeWriter() {
@@ -41,7 +42,8 @@ public class ScritturaPersone {
 		 public static void printFile() {
 			 String[] autori = {"Simone Maccobatti", "Alessandro Formigoni", "", "Francesca Gambi"}; 
 			 int numeroPersone = LetturaPersone.persone.size();
-			 
+			 int codiciInvalidi =LetturaCodiciFiscali.codiciInvalidi.size();
+			 int codiciSpaiati =LetturaCodiciFiscali.codiciSpaiati.size();
 			 try { 
 			 xmlw.writeStartElement("esercizio codice fiscale "); 
 			 xmlw.writeComment("LISTA AUTORI"); 
@@ -50,28 +52,45 @@ public class ScritturaPersone {
 			 xmlw.writeAttribute("id", Integer.toString(i)); 
 			 xmlw.writeCharacters(autori[i]); 
 			 xmlw.writeEndElement(); // chiusura di </autore>
-			 xmlw.writeStartElement("output");//radice
+			 xmlw.getPrefix("output");
              xmlw.writeComment("LISTA PERSONE DA FILE INPUT"); // scrittura di un commento
              xmlw.writeStartElement("persona");
              xmlw.writeAttribute("numero persone",Integer.toString(numeroPersone));
              for (Persona persona : LetturaPersone.persone) {
 			 xmlw.writeAttribute("id",Integer.toString(i) );
-			 xmlw.writeAttribute("nome",persona.getNome());
-			 xmlw.writeAttribute("cognome",persona.getCognome());
-			 xmlw.writeAttribute("sesso",persona.getSesso());
-			 xmlw.writeAttribute("comune_nascita" ,persona.getComuneDiNascita());
-			 xmlw.writeAttribute("data_nascita",persona.getDataDiNascita());
+			 xmlw.writeStartElement(nome);
+			 xmlw.writeCharacters(persona.getNome());
+			 xmlw.writeEndElement();
+			 xmlw.writeStartElement(cognome);
+			 xmlw.writeCharacters(persona.getCognome());
+			 xmlw.writeEndElement();
+			 xmlw.writeStartElement(sesso);
+			 xmlw.writeCharacters(persona.getSesso());
+			 xmlw.writeEndElement();
+			 xmlw.writeStartElement(comune_nascita);
+			 xmlw.writeCharacters(persona.getComuneDiNascita());
+			 xmlw.writeEndElement();
+			 xmlw.writeStartElement(data_nascita);
+			 xmlw.writeCharacters(persona.getDataDiNascita());
+			 xmlw.writeEndElement();
+			 xmlw.writeEmptyElement(codice_fiscale);
 			 if(persona.isCodicePresente()) {
 		     xmlw.writeAttribute("codice_fiscale",persona.getCodiceFiscale());}
 			 else {xmlw.writeCharacters("ASSENTE");	 
 			 xmlw.writeEndElement();
 			 xmlw.writeStartElement("codici");
-			 
-
-			 
-			 
-			 
-			 xmlw.writeEndElement(); // chiusura di </programmaArnaldo>
+			 xmlw.writeAttribute(invalidi_numero,Integer.toString(codiciInvalidi));
+			 for (int j = 0; j < codiciInvalidi; j++) {
+		     xmlw.writeStartElement("codice");
+		     xmlw.writeCharacters(persona.getCodiceFiscale());
+		     xmlw.writeEndElement();
+		      }
+			 xmlw.writeAttribute(invalidi_numero,Integer.toString(codiciSpaiati));
+			 for (int k = 0; k < codiciSpaiati; k++) {
+			     xmlw.writeStartElement("codice");
+			     xmlw.writeCharacters(persona.getCodiceFiscale());
+			     xmlw.writeEndElement();
+                 }xmlw.writeEndElement(); // chiusura di </programmaArnaldo>
 			 xmlw.writeEndDocument(); // scrittura della fine del documento
 			 xmlw.flush(); // svuota il buffer e procede alla scrittura
 			 xmlw.close(); // chiusura del documento e delle risorse impiegate
@@ -82,35 +101,3 @@ public class ScritturaPersone {
 			 
              }
 		
-	
-		 
-		 
-		 
-//		try {
-//			  while (xmlr.hasNext()) { // continua a leggere finché ha eventi a disposizione
-//				 switch (xmlr.getEventType()) { // switch sul tipo di evento
-//					 case XMLStreamConstants.START_DOCUMENT: // inizio del documento: stampa che inizia il documento
-//						 System.out.println("Start Read Doc " + filename); break;
-//					 case XMLStreamConstants.START_ELEMENT: // inizio di un elemento: stampa il nome del tag e i suoi attributi
-//						 System.out.println("Tag " + xmlr.getLocalName());
-//						 for (int i = 0; i < xmlr.getAttributeCount(); i++)
-//						 System.out.printf(" => attributo %s->%s%n", xmlr.getAttributeLocalName(i), xmlr.getAttributeValue(i));
-//						 break;
-//					 case XMLStreamConstants.END_ELEMENT: // fine di un elemento: stampa il nome del tag chiuso
-//						 System.out.println("END-Tag " + xmlr.getLocalName()); break;
-//					 case XMLStreamConstants.COMMENT:
-//						 System.out.println("// commento " + xmlr.getText()); break; // commento: ne stampa il contenuto
-//					 case XMLStreamConstants.CHARACTERS: // content all’interno di un elemento: stampa il testo
-//						 if (xmlr.getText().trim().length() > 0) // controlla se il testo non contiene solo spazi
-//						 System.out.println("-> " + xmlr.getText());
-//						 break;
-//				 }
-//				 xmlr.next();
-//				}
-//		} catch (XMLStreamException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
-
-}
